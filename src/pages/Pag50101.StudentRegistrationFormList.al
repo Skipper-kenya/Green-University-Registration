@@ -1,4 +1,5 @@
 namespace GreenUniversityStudentRegistration.GreenUniversityStudentRegistration;
+using System.Automation;
 
 page 50114 "Student Registration Form List"
 {
@@ -8,7 +9,7 @@ page 50114 "Student Registration Form List"
     SourceTable = "Student Registration Form";
     UsageCategory = Lists;
     CardPageId = "Student Registration Form Card";
-    
+
     layout
     {
         area(Content)
@@ -66,6 +67,10 @@ page 50114 "Student Registration Form List"
                 field("Emegency Contact Name"; Rec."Emegency Contact Name")
                 {
                     ToolTip = 'Specifies the value of the Emegency Contact Name field.', Comment = '%';
+                }
+                field("Enrollment Status"; Rec."Enrollment Status")
+                {
+                    ToolTip = 'Specifies the value of the Enrollment Status  field.', Comment = '%';
                 }
                 field("Emergency Contact Relationship"; Rec."Emergency Contact Relationship")
                 {
@@ -174,4 +179,23 @@ page 50114 "Student Registration Form List"
             }
         }
     }
+
+    // local procedure CheckApprovalStatus()
+    // var
+    //     approvalEntry: Record "Approval Entry";
+    // begin
+    //     ApprovalEntry.SetRange("Approver ID", UserId);
+    //     ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Open);
+
+    //     HasUserPendingApprovals := ApprovalEntry.FindFirst();
+    // end;
+
+    // var
+
+    //     HasUserPendingApprovals: Boolean;
+
+    // trigger OnOpenPage()
+    // begin
+    //     CheckApprovalStatus();
+    // end;
 }

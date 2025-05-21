@@ -1,4 +1,4 @@
-page 50131 MyRoleCenter
+page 50131 MyRoleCenter 
 {
     PageType = RoleCenter;
     Caption = 'Green University Student Portal';
@@ -19,6 +19,11 @@ page 50131 MyRoleCenter
                 {
                     Caption = 'Student Dashboard';
                     ApplicationArea = All;
+                }
+                part(ApprovalQueue; "Approval Queue Card")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Approval Queue';
                 }
             }
         }
@@ -67,49 +72,19 @@ page 50131 MyRoleCenter
 
             action(Courses)
             {
-                Caption = 'My Courses';
-                RunObject = Page "Sales Document Entity"; // Should be replaced with proper Courses page
-                ApplicationArea = All;
+                Caption = 'Apply for Registration';
+                RunObject = Page "Student Registration Form List";
+
             }
 
-            action(Schedule)
-            {
-                Caption = 'My Schedule';
-                RunObject = Page "Sales Document Line Entity"; // Should be replaced with proper Schedule page
-                ApplicationArea = All;
-            }
+
         }
 
-        area(Processing)
-        {
-            action(ViewTuitionInvoices)
-            {
-                Caption = 'View Tuition Invoices';
-                RunObject = Page "Posted Sales Invoices";
-                ApplicationArea = All;
-            }
-        }
+        // area(Processing)
 
-        area(Creation)
-        {
-            action(RequestTranscript)
-            {
-                Caption = 'Request Transcript';
-                Image = NewDocument;
-                RunObject = Page "Sales Invoice"; // Should be replaced with proper Transcript Request page
-                RunPageMode = Create;
-                ApplicationArea = All;
-            }
 
-            action(ApplyForScholarship)
-            {
-                Caption = 'Apply for Scholarship';
-                Image = NewDocument;
-                RunObject = Page "Sales Invoice"; // Should be replaced with proper Scholarship Application page
-                RunPageMode = Create;
-                ApplicationArea = All;
-            }
-        }
+        // area(Creation)
+
     }
 }
 

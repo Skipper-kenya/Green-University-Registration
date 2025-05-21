@@ -12,6 +12,17 @@ codeunit 50140 "Student  Workflow Mgmt"
         exit(DelChr(StrSubstNo(WorkflowCode, RecRef.Name), '=', ' '));
     end;
 
+     procedure OnReopenDocument(var RecRef: RecordRef)
+    var
+        WorkflowManagement: Codeunit "Workflow Management";
+        WorkflowEventHandling: Codeunit "Workflow Event Handling";
+    begin
+        // Raise event for reopening document
+        WorkflowManagement.HandleEvent(
+            GetReopenDocumentEventDescriptionTxt(),
+            RecRef);
+    end;
+
 
     [IntegrationEvent(false, false)]
     procedure OnSendWorkflowForApproval(var RecRef: RecordRef)
@@ -135,10 +146,18 @@ codeunit 50140 "Student  Workflow Mgmt"
                     if LeaveApp.Get(ApprovalEntry."Document No.") then begin
                         LeaveApp.Validate("Enrollment Status", LeaveApp."Enrollment Status"::Rejected);
                         LeaveApp.Modify(true);
+
                     end;
                 end;
         end;
     end;
+
+    local procedure GetReopenDocumentEventDescriptionTxt(): Text
+    begin
+        exit('Student Document Reopened');
+    end;
+
+    
 
     var
 

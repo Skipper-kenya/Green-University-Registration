@@ -211,8 +211,6 @@ page 50115 "Student Registration Form Card"
         }
     }
 
-
-
     actions
     {
         area(processing)
@@ -230,15 +228,19 @@ page 50115 "Student Registration Form Card"
                     ToolTip = 'Request approval to change the record.';
                     Promoted = true;
                     PromotedCategory = Process;
+                    Enabled = Rec."Enrollment Status" = Rec."Enrollment Status"::Open;
+
 
                     trigger OnAction()
                     var
                         CustomWorkflowMgmt: Codeunit "Student  Workflow Mgmt";
                         RecRef: RecordRef;
                     begin
-                        RecRef.GetTable(Rec);
-                        if CustomWorkflowMgmt.CheckApprovalsWorkflowEnabled(RecRef) then
-                            CustomWorkflowMgmt.OnSendWorkflowForApproval(RecRef);
+                        if Confirm(StrSubstNo('Are you sure you want to Submit %1 %2 For Approval?', Rec."Full Name", Rec."Entry No.")) then begin
+                            RecRef.GetTable(Rec);
+                            if CustomWorkflowMgmt.CheckApprovalsWorkflowEnabled(RecRef) then
+                                CustomWorkflowMgmt.OnSendWorkflowForApproval(RecRef);
+                        end;
                     end;
                 }
 
@@ -250,24 +252,43 @@ page 50115 "Student Registration Form Card"
                     ToolTip = 'Cancel the approval request.';
                     Promoted = true;
                     PromotedCategory = Process;
+                    Enabled = Rec."Enrollment Status" = Rec."Enrollment Status"::Pending;
 
                     trigger OnAction()
                     var
                         CustomWorkflowMgmt: Codeunit "Student  Workflow Mgmt";
                         RecRef: RecordRef;
                     begin
+                        if Confirm(StrSubstNo('Are you sure you want to Cancel Approval Request for %1 %2?', Rec."Full Name", Rec."Entry No.")) then begin
                         RecRef.GetTable(Rec);
                         CustomWorkflowMgmt.OnCancelWorkflowForApproval(RecRef);
+                        end;
                     end;
                 }
-            }
-        }
 
-        area(Creation)
-        {
-            group(Approval)
-            {
-                Caption = 'Approval';
+                action(ReopenDocument)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = '&Reopen';
+                    Image = ReOpen;
+                    ToolTip = 'Reopen the document for further editing.';
+                    Promoted = true;
+                    PromotedCategory = Process;
+                    PromotedIsBig = true;
+                    Enabled = Rec."Enrollment Status" = Rec."Enrollment Status"::Approved;
+
+                    trigger OnAction()
+                    var
+                        CustomWorkflowMgmt: Codeunit "Student  Workflow Mgmt";
+                        RecRef: RecordRef;
+                    begin
+                        if Confirm(StrSubstNo('Are you sure you want to reopen %1 %2?', Rec."Full Name", Rec."Entry No.")) then begin
+                            Rec."Enrollment Status" := Rec."Enrollment Status"::Open;
+                            Rec.Modify(true);
+                        end;
+                    end;
+                }
+
 
                 action(Approve)
                 {
@@ -276,7 +297,9 @@ page 50115 "Student Registration Form Card"
                     Image = Approve;
                     ToolTip = 'Approve the requested changes.';
                     Promoted = true;
-                    PromotedCategory = New;
+                    PromotedCategory = Process;
+
+
 
                     trigger OnAction()
                     begin
@@ -291,7 +314,8 @@ page 50115 "Student Registration Form Card"
                     Image = Reject;
                     ToolTip = 'Reject the approval request.';
                     Promoted = true;
-                    PromotedCategory = New;
+                    PromotedCategory = Process;
+                    // Enabled = HasUserPendingApprovals;
 
                     trigger OnAction()
                     begin
@@ -306,7 +330,9 @@ page 50115 "Student Registration Form Card"
                     Image = Delegate;
                     ToolTip = 'Delegate the approval to a substitute approver.';
                     Promoted = true;
-                    PromotedCategory = New;
+                    PromotedCategory = Process;
+                    // Enabled = HasUserPendingApprovals;
+
 
                     trigger OnAction()
                     begin
@@ -321,7 +347,7 @@ page 50115 "Student Registration Form Card"
                     Image = ViewComments;
                     ToolTip = 'View or add comments for the record.';
                     Promoted = true;
-                    PromotedCategory = New;
+                    PromotedCategory = Process;
 
                     trigger OnAction()
                     begin
@@ -336,7 +362,7 @@ page 50115 "Student Registration Form Card"
                     Image = Approvals;
                     ToolTip = 'View approval requests.';
                     Promoted = true;
-                    PromotedCategory = New;
+                    PromotedCategory = Process;
 
                     trigger OnAction()
                     begin
@@ -348,7 +374,18 @@ page 50115 "Student Registration Form Card"
     }
 
 
+    // local procedure CheckApprovalStatus()
+    // var
+    //     approvalEntry: Record "Approval Entry";
+    // begin
+    //     // ApprovalEntry.SetRange("Approver ID", UserId);
+    //     ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Open);
+
+    //     HasUserPendingApprovals := ApprovalEntry.FindFirst();
+    // end;
+
     var
         ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+        HasUserPendingApprovals: Boolean;
 
 }
