@@ -45,8 +45,6 @@ report 50100 "Customer Report"
             }
             trigger OnPreDataItem()
             begin
-
-
                 // if CustomerNumber = '' then Error('Please select a customer number');
 
                 if CustomerNumber <> '' then
@@ -81,7 +79,6 @@ report 50100 "Customer Report"
                         Caption = 'Customer Number';
                         ShowMandatory = true; // Show mandatory fieldt
                         TableRelation = Customer; // Set table relation  otherwise it will ask user to type
-
                     }
                 }
             }

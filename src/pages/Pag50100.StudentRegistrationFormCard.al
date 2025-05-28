@@ -348,7 +348,6 @@ page 50115 "Student Registration Form Card"
                     ToolTip = 'View or add comments for the record.';
                     Promoted = true;
                     PromotedCategory = Process;
-
                     trigger OnAction()
                     begin
                         ApprovalsMgmt.GetApprovalComment(Rec);
